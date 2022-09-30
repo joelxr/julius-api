@@ -18,14 +18,30 @@ export default () => {
         }
       }
 
+      const withDateInterval = (queryBuilder: any) => {
+        if (req.query.start && req.query.end) {
+          queryBuilder.whereRaw('expense.date between ? and ?', [
+            req.query.start,
+            req.query.end,
+          ])
+        }
+      }
+
       const result = await db
-        .select(db.raw('expense.*, json_agg(product) as product'))
+        .select(
+          db.raw(
+            `expense.*,
+             expense.count * expense.unit_price - coalesce(expense.discount, 0) as total,
+             json_agg(product) as product`
+          )
+        )
         .limit(limit)
         .offset(offset)
         .from('expense')
         .groupBy('expense.id')
         .join('product', 'expense.product_id', 'product.id')
         .modify(withName)
+        .modify(withDateInterval)
         .orderBy(orderBy)
       return res.json(result)
     } catch (err) {

@@ -11,6 +11,7 @@ export default () => {
              count(expense) as count,
              sum(expense.count) as product_count,
              sum(expense.count * expense.unit_price) as subtotal,
+             sum(expense.count * expense.unit_price - coalesce(expense.discount, 0)) as total,
              sum(expense.discount) as discount,
              min(expense.unit_price) as min,
              max(expense.unit_price) as max,
