@@ -1,9 +1,10 @@
 import Knex from 'knex'
 
+const connection = process.env.DB_CONNECTION
+
 export const db = Knex({
   client: 'pg',
-  connection:
-    'postgresql://postgres:RJ3OIsCulTgxSnyNXwG5@containers-us-west-84.railway.app:6599/railway',
+  connection,
   pool: {
     min: 2,
     max: 10,

@@ -1,11 +1,13 @@
 import express from 'express'
-import { service } from '../serviceBuilder'
+import find from './find'
+import findOne from './findOne'
+import { upsert, remove } from '../_base-service'
 
 const router = express.Router()
-const productService = service('product')
 
-router.get('/', productService.find())
-router.get('/:id', productService.findOne())
-router.post('/', productService.upsert())
-router.delete('/:id', productService.remove())
+router.get('/', find())
+router.get('/:id', findOne())
+router.post('/', upsert('product'))
+router.delete('/:id', remove('product'))
+
 export default router
