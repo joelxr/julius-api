@@ -2,6 +2,9 @@ import { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
   await knex.raw(
+    `CREATE TABLE service_accounts(id serial PRIMARY KEY, "key" varchar NOT NULL UNIQUE);`
+  )
+  await knex.raw(
     `CREATE TABLE tag( id serial PRIMARY KEY, "name" varchar NOT NULL UNIQUE);`
   )
   await knex.raw(
@@ -29,4 +32,5 @@ export async function down(knex: Knex): Promise<void> {
   await knex.raw(`DROP TABLE product_tags;`)
   await knex.raw(`DROP TABLE product;`)
   await knex.raw(`DROP TABLE tag;`)
+  await knex.raw(`DROP TABLE service_accounts;`)
 }
