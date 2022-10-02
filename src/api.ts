@@ -15,36 +15,38 @@ app.use(bodyParser.json())
 app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
 app.use(bodyParser.text({ type: 'text/html' }))
 
-//app.use((req: any, res: any, next: any) => {
-//  if (req.body && typeof req.body === 'object') {
-//    req.body = humps.decamelizeKeys(req.body)
-//  }
-//
-//  if (req.query && typeof req.query === 'object') {
-//    req.query = humps.decamelizeKeys(req.query)
-//  }
-//
-//  const sendJson = res.json
-//  res.json = (data: any) => {
-//    return sendJson.call(res, humps.camelizeKeys(data))
-//  }
-//
-//  next()
-//})
-//
-//app.use((err: any, req: any, res: any, next: any) => {
-//  res.status(500).json({ message: err.message })
-//})
-//
-//app.use(async (req: any, res: any, next: any) => {
-//  const apiKey = req.headers['api-key']
-//
-//  if (!(await isValidApiKey(apiKey))) {
-//    return res.status(401).json({ message: 'Invalid API Key' })
-//  }
-//
-//  next()
-//})
+app.use((req: any, res: any, next: any) => {
+  if (req.body && typeof req.body === 'object') {
+    req.body = humps.decamelizeKeys(req.body)
+  }
+
+  if (req.query && typeof req.query === 'object') {
+    req.query = humps.decamelizeKeys(req.query)
+  }
+
+  const sendJson = res.json
+  res.json = (data: any) => {
+    return sendJson.call(res, humps.camelizeKeys(data))
+  }
+
+  next()
+})
+
+app.use((err: any, req: any, res: any, next: any) => {
+  res.status(500).json({ message: err.message })
+})
+
+const allowedPaths = ['/']
+
+app.use(async (req: any, res: any, next: any) => {
+  const apiKey = req.headers['api-key']
+
+  if (!allowedPaths.includes(req.path) && !(await isValidApiKey(apiKey))) {
+    return res.status(401).json({ message: 'Invalid API Key' })
+  }
+
+  next()
+})
 
 app.get('/', async (req, res) => {
   res.send(`Hello, World!`)
