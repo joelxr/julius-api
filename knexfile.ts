@@ -1,10 +1,11 @@
 import type { Knex } from 'knex'
 
+const connection = process.env.DB_CONNECTION
+
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'pg',
-    connection:
-      'postgresql://postgres:RJ3OIsCulTgxSnyNXwG5@containers-us-west-84.railway.app:6599/railway',
+    connection,
     pool: {
       min: 2,
       max: 10,
