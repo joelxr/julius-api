@@ -1,4 +1,5 @@
 import express, { Application } from 'express'
+import bodyParser from 'body-parser'
 import cors from 'cors'
 import humps from 'humps'
 import tags from './tags'
@@ -10,8 +11,12 @@ import { isValidApiKey } from './auth'
 const app: Application = express()
 const port: number = Number(process.env.PORT) | 8091
 
-app.use(express.json())
+app.use(express())
+app.use(bodyParser.json())
+app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
+app.use(bodyParser.text({ type: 'text/html' }))
 app.use(cors())
+
 app.use((req: any, res: any, next: any) => {
   if (req.body && typeof req.body === 'object') {
     req.body = humps.decamelizeKeys(req.body)
@@ -28,6 +33,7 @@ app.use((req: any, res: any, next: any) => {
 
   next()
 })
+
 app.use((err: any, req: any, res: any, next: any) => {
   res.status(500).json({ message: err.message })
 })
@@ -40,6 +46,10 @@ app.use(async (req: any, res: any, next: any) => {
   }
 
   next()
+})
+
+app.get('/', async (req, res) => {
+  res.send(`Hello, World!`)
 })
 
 app.use('/tags', tags)
