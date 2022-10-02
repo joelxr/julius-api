@@ -49,7 +49,7 @@ app.use(async (req: any, res: any, next: any) => {
 })
 
 app.get('/', async (req, res) => {
-  res.send(`Hello, World!`)
+  res.send(`Service is alive!`)
 })
 
 app.use('/tags', tags)
