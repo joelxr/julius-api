@@ -47,6 +47,6 @@ app.use('/products', products)
 app.use('/product-tags', productTags)
 app.use('/expenses', expenses)
 
-app.listen(port, function () {
+app.listen(port, '0.0.0.0', function () {
   console.log(`Service is listening to port ${port}...`)
 })
