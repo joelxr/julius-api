@@ -14,6 +14,7 @@ const port: number = Number(process.env.PORT) || 8091
 app.use(bodyParser.json())
 app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
 app.use(bodyParser.text({ type: 'text/html' }))
+app.use(cors())
 
 app.use((req: any, res: any, next: any) => {
   if (req.body && typeof req.body === 'object') {
