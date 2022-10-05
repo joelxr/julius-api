@@ -14,7 +14,7 @@ export default () => {
 
       const withName = (queryBuilder: any) => {
         if (req.query.name) {
-          queryBuilder.whereILike('name', `${req.query.name}%`)
+          queryBuilder.whereILike('name', `%${req.query.name}%`)
         }
       }
 
@@ -24,6 +24,12 @@ export default () => {
             req.query.start,
             req.query.end,
           ])
+        }
+      }
+
+      const withProductId = (queryBuilder: any) => {
+        if (req.query.product_id) {
+          queryBuilder.where('product_id', `${req.query.product_id}`)
         }
       }
 
@@ -42,6 +48,7 @@ export default () => {
         .join('product', 'expense.product_id', 'product.id')
         .modify(withName)
         .modify(withDateInterval)
+        .modify(withProductId)
         .orderBy(orderBy)
       return res.json(result)
     } catch (err) {
