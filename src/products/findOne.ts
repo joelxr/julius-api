@@ -4,6 +4,16 @@ export default () => {
   return async (req: any, res: any, next: any) => {
     try {
       const { id } = req.params
+
+      const withDateInterval = (queryBuilder: any) => {
+        if (req.query.start && req.query.end) {
+          queryBuilder.whereRaw('expense.date between ? and ?', [
+            req.query.start,
+            req.query.end,
+          ])
+        }
+      }
+
       const result = await db
         .select(
           db.raw(
@@ -26,10 +36,11 @@ export default () => {
              )) as expenses`
           )
         )
+        .modify(withDateInterval)
         .from('product')
         .where(`product.id`, '=', id)
         .groupBy('product.id')
-        .join('expense', 'expense.product_id', 'product.id')
+        .leftJoin('expense', 'expense.product_id', 'product.id')
         .first()
       return res.json(result)
     } catch (err) {

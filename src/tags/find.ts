@@ -45,8 +45,8 @@ export default () => {
         .offset(offset)
         .from('tag')
         .groupBy('tag.id')
-        .join('product_tags', 'product_tags.tag_id', 'tag.id')
-        .join('expense', 'expense.product_id', 'product_tags.product_id')
+        .leftJoin('product_tags', 'product_tags.tag_id', 'tag.id')
+        .leftJoin('expense', 'expense.product_id', 'product_tags.product_id')
         .orderBy(orderBy)
       return res.json(result)
     } catch (err) {
